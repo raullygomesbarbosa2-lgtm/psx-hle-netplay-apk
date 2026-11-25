@@ -1,0 +1,53 @@
+name: Build PSX HLE NetPlay APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Extract original web project
+        run: unzip -q webapp-source.zip -d webapp
+      - name: Build original web app
+        working-directory: webapp
+        env:
+          VITE_NETPLAY_WS_BASE: wss://psx-hle-netplay-android.onrender.com/ws/netplay
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+      - name: Bundle web assets into Android APK
+        run: cp -R webapp/dist/. android/app/src/main/assets/
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Build Android APK
+        run: gradle -p android --no-daemon assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: psx-hle-netplay-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+      - name: Publish installable APK release
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-build-${{ github.run_number }}
+          name: PSX HLE NetPlay APK Build ${{ github.run_number }}
+          generate_release_notes: false
+          files: android/app/build/outputs/apk/debug/app-debug.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
