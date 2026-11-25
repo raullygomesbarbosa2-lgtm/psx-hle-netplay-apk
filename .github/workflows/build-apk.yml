@@ -32,6 +32,7 @@ jobs:
           python3 android/patches/throttle-p2-stream.py
           python3 android/patches/p2-canvas-backup.py
           python3 android/patches/p2-visible-fallback.py
+          python3 android/patches/preflight-device-memory.py
       - name: Build original web app
         working-directory: webapp
         env:
