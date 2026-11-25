@@ -11,8 +11,8 @@ android {
         applicationId = "com.psxhle.netplay"
         minSdk = 23
         targetSdk = 29
-        versionCode = 5
-        versionName = "1.0.4-android6-diagnostics"
+        versionCode = 7
+        versionName = "1.0.6-no-fake-game-screen"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
