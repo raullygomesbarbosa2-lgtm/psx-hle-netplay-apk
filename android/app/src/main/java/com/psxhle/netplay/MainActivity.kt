@@ -48,6 +48,11 @@ class MainActivity : Activity() {
         }
 
         @JavascriptInterface
+        fun openWebViewUpdatePage() {
+            runOnUiThread { openWebViewUpdatePageInternal() }
+        }
+
+        @JavascriptInterface
         fun reportCapabilities(wasm: Boolean, webgl1: Boolean, webgl2: Boolean) {
             runOnUiThread {
                 if (capabilityWarningShown || (wasm && webgl1)) return@runOnUiThread
@@ -57,9 +62,12 @@ class MainActivity : Activity() {
                     if (!webgl1) add("WebGL 1 / OpenGL ES 2")
                 }.joinToString(" e ")
                 android.app.AlertDialog.Builder(this@MainActivity)
-                    .setTitle("Compatibilidade gráfica do Android")
-                    .setMessage("Este WebView não disponibiliza $missing. Por isso a ISO pode ser reconhecida, mas o jogo aparecer preto. Atualiza o Android System WebView/Chrome pela Play Store e reabre o app. O APK aceita Android 6.0 (API 23), mas o WebView e o driver gráfico também precisam oferecer esses recursos.")
-                    .setPositiveButton("Entendi", null)
+                    .setTitle("Compatibilidade do emulador neste aparelho")
+                    .setMessage("O componente web atual do aparelho não oferece $missing. O APK instala no Android 6.0, mas esta versão baseada em WebView precisa de WebAssembly e WebGL 1 para executar o núcleo PS1; sem eles, uma ISO pode ser identificada e a tela do jogo continuar preta. Vou abrir a página para verificar se há atualização do Android System WebView disponível. Se não houver, este WebView não consegue executar o núcleo; será necessária uma versão com emulação nativa para esse aparelho.")
+                    .setPositiveButton(if (!wasm) "Ver atualização" else "Entendi") { _, _ ->
+                        if (!wasm) openWebViewUpdatePageInternal()
+                    }
+                    .setNegativeButton("Fechar", null)
                     .show()
             }
         }
@@ -119,6 +127,19 @@ class MainActivity : Activity() {
         }
         privacyPrefs.edit().putBoolean("active", false).remove("previous_filter").apply()
         pendingDndRestore = false
+    }
+
+    private fun openWebViewUpdatePageInternal() {
+        val storeIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.webview"))
+        try {
+            startActivity(storeIntent)
+        } catch (_: Throwable) {
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.webview")))
+            } catch (_: Throwable) {
+                Toast.makeText(this, "A Play Store não está disponível neste aparelho.", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun openDndSettingsPage() {

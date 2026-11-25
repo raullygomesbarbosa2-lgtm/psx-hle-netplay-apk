@@ -11,8 +11,8 @@ android {
         applicationId = "com.psxhle.netplay"
         minSdk = 23
         targetSdk = 29
-        versionCode = 4
-        versionName = "1.0.3-frame-capture"
+        versionCode = 5
+        versionName = "1.0.4-android6-diagnostics"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

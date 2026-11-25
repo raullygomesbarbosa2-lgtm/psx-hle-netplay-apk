@@ -18,8 +18,10 @@ jobs:
           node-version: 22
       - name: Extract original web project
         run: unzip -oq webapp-source.zip -d webapp
-      - name: Apply APK-only Solo frame-capture patch
-        run: python3 android/patches/enable-solo-frame-capture.py
+      - name: Apply APK-only compatibility patches without changing source ZIP
+        run: |
+          python3 android/patches/enable-solo-frame-capture.py
+          python3 android/patches/reject-invalid-raw-images.py
       - name: Build original web app
         working-directory: webapp
         env:
