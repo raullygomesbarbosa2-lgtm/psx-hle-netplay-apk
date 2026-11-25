@@ -22,6 +22,7 @@ jobs:
         run: |
           python3 android/patches/enable-solo-frame-capture.py
           python3 android/patches/reject-invalid-raw-images.py
+          python3 android/patches/remove-play-store-prompt.py
       - name: Build original web app
         working-directory: webapp
         env:
