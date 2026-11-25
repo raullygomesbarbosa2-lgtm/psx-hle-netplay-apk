@@ -50,8 +50,8 @@ replacement = '''    private fun makeNotificationPolicy(categories: Int, callSen
             val visuals = if (Build.VERSION.SDK_INT >= 28) NotificationManager.Policy.SUPPRESSED_EFFECT_ALL else 0
             manager.setNotificationPolicy(makeNotificationPolicy(
                 NotificationManager.Policy.PRIORITY_CATEGORY_MEDIA,
-                NotificationManager.Policy.PRIORITY_SENDERS_NONE,
-                NotificationManager.Policy.PRIORITY_SENDERS_NONE,
+                0,
+                0,
                 visuals
             ))
             manager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_PRIORITY)
