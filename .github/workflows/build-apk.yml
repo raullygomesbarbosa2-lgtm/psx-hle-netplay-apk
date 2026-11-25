@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: 22
       - name: Extract original web project
-        run: unzip -q webapp-source.zip -d webapp
+        run: unzip -oq webapp-source.zip -d webapp
       - name: Build original web app
         working-directory: webapp
         env:
