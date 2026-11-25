@@ -23,7 +23,7 @@ jobs:
         env:
           VITE_NETPLAY_WS_BASE: wss://psx-hle-netplay-android.onrender.com/ws/netplay
         run: |
-          npm install --no-audit --no-fund
+          npm install --legacy-peer-deps --no-audit --no-fund
           npm run build
       - name: Bundle web assets into Android APK
         run: cp -R webapp/dist/. android/app/src/main/assets/
