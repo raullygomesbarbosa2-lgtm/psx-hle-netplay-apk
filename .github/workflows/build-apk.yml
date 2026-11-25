@@ -29,6 +29,7 @@ jobs:
           python3 android/patches/zip-solo-only.py
           python3 android/patches/login-timeout-no-size-block.py
           python3 android/patches/p2-no-ps1-runtime.py
+          python3 android/patches/throttle-p2-stream.py
       - name: Build original web app
         working-directory: webapp
         env:
