@@ -40,7 +40,8 @@ jobs:
           python3 android/patches/preflight-device-memory.py
           python3 android/patches/quick-boot-splash.py
           python3 android/patches/android-renderer-recovery.py
-          python3 android/patches/bump-apk-version-19.py
+          python3 android/patches/immediate-ps-logo-on-selection.py
+          python3 android/patches/bump-apk-version-20.py
       - name: Build original web app
         working-directory: webapp
         env:
