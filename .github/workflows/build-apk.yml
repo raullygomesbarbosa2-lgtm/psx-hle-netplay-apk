@@ -26,6 +26,7 @@ jobs:
           python3 android/patches/disable-fake-streaming-overlay.py
           python3 android/patches/android6-large-disc-login.py
           python3 android/patches/guard-low-memory-and-webview.py
+          python3 android/patches/zip-solo-only.py
       - name: Build original web app
         working-directory: webapp
         env:
