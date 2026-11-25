@@ -11,8 +11,8 @@ android {
         applicationId = "com.psxhle.netplay"
         minSdk = 23
         targetSdk = 29
-        versionCode = 3
-        versionName = "1.0.2-remote-privacy"
+        versionCode = 4
+        versionName = "1.0.3-frame-capture"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
