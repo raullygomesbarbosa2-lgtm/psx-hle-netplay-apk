@@ -46,6 +46,7 @@ jobs:
           python3 android/patches/privacy-dnd-priority-legacy.py
           python3 android/patches/preflight-device-memory.py
           python3 android/patches/chrome54-p2-web.py
+          python3 android/patches/quick-boot-splash.py
           python3 android/patches/android6-site-paths.py
       - name: Build Android 6 compatible web app
         working-directory: webapp
@@ -55,8 +56,10 @@ jobs:
         run: |
           npm install --legacy-peer-deps --no-audit --no-fund
           npm run build
-      - name: Add a direct entry URL for older Android browsers
-        run: cp webapp/dist/index.html webapp/dist/marshmallow.html
+      - name: Add the compact Marshmallow entry page
+        run: |
+          cp webapp/dist/index.html webapp/dist/marshmallow.html
+          python3 android/patches/marshmallow-compact-page.py webapp/dist/marshmallow.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: webapp/dist

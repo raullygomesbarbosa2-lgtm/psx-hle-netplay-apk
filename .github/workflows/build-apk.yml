@@ -38,6 +38,9 @@ jobs:
           python3 android/patches/privacy-dnd-media.py
           python3 android/patches/privacy-dnd-priority-legacy.py
           python3 android/patches/preflight-device-memory.py
+          python3 android/patches/quick-boot-splash.py
+          python3 android/patches/android-renderer-recovery.py
+          python3 android/patches/bump-apk-version-19.py
       - name: Build original web app
         working-directory: webapp
         env:
