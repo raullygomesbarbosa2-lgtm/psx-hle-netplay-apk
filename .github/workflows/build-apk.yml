@@ -32,6 +32,8 @@ jobs:
           python3 android/patches/throttle-p2-stream.py
           python3 android/patches/p2-canvas-backup.py
           python3 android/patches/p2-visible-fallback.py
+          python3 android/patches/netplay-zip-touch-mobile.py
+          python3 android/patches/native-sdk-link-mobile.py
           python3 android/patches/preflight-device-memory.py
       - name: Build original web app
         working-directory: webapp
