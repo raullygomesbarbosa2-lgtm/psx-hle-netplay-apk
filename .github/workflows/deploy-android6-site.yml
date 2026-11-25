@@ -44,6 +44,8 @@ jobs:
         run: |
           npm install --legacy-peer-deps --no-audit --no-fund
           npm run build
+      - name: Add a direct entry URL for older Android browsers
+        run: cp webapp/dist/index.html webapp/dist/marshmallow.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: webapp/dist
