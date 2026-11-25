@@ -11,8 +11,8 @@ android {
         applicationId = "com.psxhle.netplay"
         minSdk = 23
         targetSdk = 29
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1-android6-webgl1-fix"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

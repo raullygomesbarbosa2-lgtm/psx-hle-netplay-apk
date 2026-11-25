@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import android.webkit.JavascriptInterface
+import android.webkit.ConsoleMessage
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -18,11 +20,32 @@ class MainActivity : Activity() {
     private var pendingFileCallback: ValueCallback<Array<Uri>>? = null
 
     private val filePickerRequest = 4701
+    private var capabilityWarningShown = false
+
+    private inner class RuntimeBridge {
+        @JavascriptInterface
+        fun reportCapabilities(wasm: Boolean, webgl1: Boolean, webgl2: Boolean) {
+            runOnUiThread {
+                if (capabilityWarningShown || (wasm && webgl1)) return@runOnUiThread
+                capabilityWarningShown = true
+                val missing = buildList {
+                    if (!wasm) add("WebAssembly")
+                    if (!webgl1) add("WebGL 1 / OpenGL ES 2")
+                }.joinToString(" e ")
+                android.app.AlertDialog.Builder(this@MainActivity)
+                    .setTitle("Compatibilidade gráfica do Android")
+                    .setMessage("Este WebView não disponibiliza $missing. Por isso a ISO pode ser reconhecida, mas o jogo aparecer preto. Atualiza o Android System WebView/Chrome pela Play Store e reabre o app. O APK aceita Android 6.0 (API 23), mas o WebView e o driver gráfico também precisam oferecer esses recursos.")
+                    .setPositiveButton("Entendi", null)
+                    .show()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         web = WebView(this)
         web.setBackgroundColor(android.graphics.Color.rgb(15, 17, 21))
+        web.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         web.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
@@ -37,9 +60,15 @@ class MainActivity : Activity() {
         val loader = WebViewAssetLoader.Builder()
             .addPathHandler("/", WebViewAssetLoader.AssetsPathHandler(this))
             .build()
+        web.addJavascriptInterface(RuntimeBridge(), "AndroidRuntime")
         web.webViewClient = object : WebViewClient() {
             override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest) =
                 loader.shouldInterceptRequest(request.url)
+
+            override fun onPageFinished(view: WebView, url: String) {
+                super.onPageFinished(view, url)
+                view.evaluateJavascript("(function(){try{var c=document.createElement('canvas');var g1=!!(c.getContext('webgl')||c.getContext('experimental-webgl'));var g2=!!c.getContext('webgl2');var w=typeof WebAssembly==='object';AndroidRuntime.reportCapabilities(w,g1,g2);}catch(e){AndroidRuntime.reportCapabilities(false,false,false);}})();", null)
+            }
 
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                 val host = request.url.host.orEmpty()
